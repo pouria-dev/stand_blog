@@ -51,7 +51,7 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments") 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments' , null=True , blank=True)
     
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)

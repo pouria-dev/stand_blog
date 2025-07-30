@@ -39,6 +39,7 @@ def contact(request):
 
 def article(request):
     article = Article.objects.filter(status=True)
+
     paginator = Paginator(article, 1)  # Show 4 contacts per page.
 
     page_number = request.GET.get("page")
