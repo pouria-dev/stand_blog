@@ -100,12 +100,13 @@
                                         <div class="sidebar-heading">
                                             <h2>4 comments</h2>
                                         </div>
+
+                                        {% for comment in article.comments.all %}
                                         <div class="content">
-                                             {% for comment in comments %}
+                                             
                                             <ul>
 
-                                                {% if commentreply == None %}
-
+                                                {% if comment.parent == None %}
                                                     <li>
                                                         <div class="author-thumb">
                                                             <img src="" alt="">
@@ -115,9 +116,7 @@
                                                             <p>{{ comment.text}}</p>
                                                         </div>
                                                     </li>
-                                                    {% else %}
-
-
+                                                {% else %}
                                                     
                                                     <li class="replied">
                                                         <div class="author-thumb">
@@ -131,14 +130,12 @@
                                                       <li>
                                                     </li>
                                                     <div></div>
-
-
-                                                    {% endif %}
-                                                
+                                                {% endif %}
                                             </ul>
-                                            {% endfor %}
                                             
                                         </div>
+                                        {% endfor %}
+
                                     </div>
                                 </div>
 

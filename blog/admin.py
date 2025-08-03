@@ -55,7 +55,17 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ('title',)
 
 
-admin.site.register(Comment)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'text', 'created', 'article')
+    search_fields = ('author__username', 'text')
+    list_filter = ('created', 'article')
+    ordering = ('-created',)
+    readonly_fields = ('created',)
+
+    def post(self, obj):
+        return obj.post.title if obj.post else "No Post"    
+    
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):

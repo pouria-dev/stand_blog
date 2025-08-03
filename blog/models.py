@@ -1,9 +1,12 @@
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.functions import datetime
 from django.urls import reverse
 from django.utils.text import slugify
+from .manager import Model_Manager
+
+
+
 
 
 class Category(models.Model):
@@ -29,6 +32,10 @@ class Article(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    objects =  models.Manager()  # Default manager 
+    custom_manager = Model_Manager()  # Custom manager for additional functionality
+    # If objects is null , the custom manager will be used by default
+    # and change the base-query-set to filter articles with status=True in admin panel !!
     class Meta:
         verbose_name='بلاگ'
         verbose_name_plural = 'بلاگ ها'
@@ -51,16 +58,20 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments") 
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments") # رابطه معکوس برای این فیلد
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments' , null=True , blank=True)
-    
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
-
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
+
 
     def __str__(self):
-        return f"{self.author.username}------{self.text[:30]}"
+        if self.author.username:
+            return f"{self.author.username} - {self.text[:30]}"
+        return f"Anonymous - {self.text[:30]}"
+    
+         
+    
     class Meta:
 
         verbose_name = 'نظر'

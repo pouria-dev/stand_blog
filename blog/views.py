@@ -28,7 +28,9 @@ def contact(request):
             Message.objects.create(name=name, text=text, email=email)
 
             # redirect to a new URL:
-            return redirect(reverse("blog:home"))
+            return redirect(reverse("blog:home"))   #  If you to use app-name in python , 
+                                                    #you should use reverse function
+                                                    
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -38,7 +40,8 @@ def contact(request):
 
 
 def article(request):
-    article = Article.objects.filter(status=True)
+    article = Article.custom_manager.all() # Using the custom base-query-set to filter active articles
+    # In manager.py, the get_queryset method filters articles with status=True
 
     paginator = Paginator(article, 1)  # Show 4 contacts per page.
 
