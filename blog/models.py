@@ -28,7 +28,7 @@ class Article(models.Model):
     category = models.ManyToManyField(Category, related_name='articles', verbose_name='دسته بندی')
     banner = models.ImageField(upload_to='article/banner', help_text='best size for banner:770x340')
     status = models.BooleanField(default=False)
-    slug = models.SlugField(null=True, unique=True, blank=True, default=1)
+    slug = models.SlugField(null=True, unique=True, blank=True, default=1) # slug field for SEO
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -41,6 +41,7 @@ class Article(models.Model):
         verbose_name_plural = 'بلاگ ها'
 
         ordering = ['-created']
+        
 
 
         
@@ -50,8 +51,10 @@ class Article(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.slug = slugify(self.title)
-        super(Article, self).save()
+        if not self.slug:
+
+            self.slug = slugify(self.title)
+        super().save()
 
     def __str__(self):
         return f'{self.title}'

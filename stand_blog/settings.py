@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    "blog",
-    "user_app",
-    "django_social_share",
+    'django_render_partial', # For rendering partial templates
+    'django_social_share', # For social sharing features
+    
+    "blog.apps.BlogConfig",
+    "user_app.apps.UserAppConfig",
+
 
 ]
 

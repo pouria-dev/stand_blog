@@ -34,18 +34,17 @@ class ArticleAdmin(admin.ModelAdmin):
     list_editable = ('status',)
     search_fields = ('title', 'text')
     prepopulated_fields = {'slug': ('title',)}
-    list_editable = ('status',)
     ordering = ('-created',)
-    readonly_fields = ('created', 'updated')
-
+    readonly_fields = ( 'created', 'updated')
     fieldsets = (
-        (' کارهای مربوط به مقاله', {
+        ('کارهای مربوط به مقاله', {
             'fields': ('title', 'text', 'image', 'banner', 'category', 'status', 'slug')
         }),
         ('تاریخ', {
             'fields': ('updated', 'created'),
         }),
     )
+
 
 
 @admin.register(Category)
