@@ -11,15 +11,32 @@ from .manager import Model_Manager
 
 class Category(models.Model):
     title = models.CharField(max_length=15 , unique=True, verbose_name='عنوان')
-
-    def __str__(self):
-        return f'{self.title}'
+    slug = models.SlugField(null=True, unique=True, blank=True) # slug field for SEO and clean url
     
     class Meta:
         verbose_name = 'دسته بندی'
         verbose_name_plural = 'دسته بندی ها'
         ordering = ['title']
 
+
+    def get_absolute_url(self):
+        return reverse('blog:category', kwargs={"slug": self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:        
+            self.slug = slugify(self.title)
+            
+        return super().save(*args, **kwargs)
+    
+    
+    
+    def __str__(self):
+        return f'{self.title}'
+    
+    
+     
+    
+    
 
 class Article(models.Model):
     title = models.CharField(max_length=20, help_text="It should be unique", unique=True, verbose_name='عنوان')
@@ -28,7 +45,7 @@ class Article(models.Model):
     category = models.ManyToManyField(Category, related_name='articles', verbose_name='دسته بندی')
     banner = models.ImageField(upload_to='article/banner', help_text='best size for banner:770x340')
     status = models.BooleanField(default=False)
-    slug = models.SlugField(null=True, unique=True, blank=True, default=1) # slug field for SEO
+    slug = models.SlugField(null=True, unique=True, blank=True) # slug field for SEO
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -48,14 +65,11 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={"slug": self.slug})
 
-    def save(
-            self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-        if not self.slug:
-
-            self.slug = slugify(self.title)
-        super().save()
-
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+    
+    
     def __str__(self):
         return f'{self.title}'
 

@@ -71,9 +71,13 @@ def article_detail(request, slug):
                                                          "form": form})
 
 
-def category_detail(request, pk=None):
-    category = get_object_or_404(Category, id=pk)
+def category_detail(request, slug):
+    category = get_object_or_404(Category, slug=slug)
     articles = category.articles.all()
+    # Reverse relationship is used here to get all articles related to the category
+    # we use this by typing "model_name.related_name.all()" , the ralated_name is defined in the model
+    # the defult of related_name is "model_name_set" , so we can use "category.article_set.all()" 
+    # but we can change it to a more readable name like "articles" in the model
 
     return render(request, 'blog/blog.html', {'objects': articles})
 

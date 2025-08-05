@@ -41,7 +41,7 @@
                         <ul>
                             {% for object in category %}
 
-                                <li><a href="{% url 'blog:category' object.id%}">-{{ object.title }}</a></li>
+                                <li><a href="{{object.get_absolute_url}}">-{{ object.title }}</a></li>
 
                             {% endfor %}
 
