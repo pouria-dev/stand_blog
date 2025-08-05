@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -33,10 +32,6 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.title}'
     
-    
-     
-    
-    
 
 class Article(models.Model):
     title = models.CharField(max_length=20, help_text="It should be unique", unique=True, verbose_name='عنوان')
@@ -60,8 +55,6 @@ class Article(models.Model):
         ordering = ['-created']
         
 
-
-        
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={"slug": self.slug})
 

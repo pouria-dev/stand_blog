@@ -5,7 +5,8 @@ app_name='blog'
 
 urlpatterns = [
     path('' , index , name='home'),
-    path('all' , article , name='articles'),
+    path('list' , article , name='list'),
+    path('about' , about , name='about'),
     path('detail/<str:slug>' , article_detail , name='detail'),
     path('category/<str:slug>' , category_detail , name='category'),
     path('contact' , contact , name="contact"),

@@ -14,6 +14,11 @@ def index(request):
     return render(request, 'blog/index.html', {'objects': article, 'article_ordring': article_ordring})
 
 
+
+def about(request):
+    return render(request, 'blog/about.html', {})
+
+
 def contact(request):
     if request.method == "POST":
         # create a form instance and populate it with data from the request:
