@@ -2,26 +2,8 @@
 {% load static %}
 
 {% block content %}
-<body>
+    <body>
 
-    <!-- Page Content -->
-    <!-- Banner Starts Here -->
-    <div class="heading-page header-text">
-        <section class="page-heading">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-content">
-                            <h4>Recent Posts</h4>
-                            <h2>Our Recent Blog Entries</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Banner Ends Here -->
 
     <section class="call-to-action">
         <div class="container">
@@ -46,139 +28,167 @@
         </div>
     </section>
 
-    <div class="main-banner header-text">
+    <section class="blog-posts grid-system">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="all-blog-posts">
+                        <div class="row">
 
 
-        <section class="blog-posts grid-system">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="all-blog-posts">
-                            <div class="row">
-
-
-                                <div class="col-lg-12">
-                                    <div class="blog-post">
-                                        <div class="blog-thumb">
-                                            <img src="{{ objects.image.url }}" alt="">
-                                        </div>
-                                        <div class="down-content">
-                                            <span>{{ objects.category }}</span>
-                                            <a href="article-details.html"><h4>Aenean pulvinar gravida sem nec</h4></a>
-                                            <ul class="post-info">
-                                                <li><a href="#">Admin</a></li>
-                                                <li><a href="#">May 12, 2020</a></li>
-                                                <li><a href="#">10 Comments</a></li>
-                                            </ul>
-                                            <p>
-                                                {{ objects.text }}
-                                            </p>
-                                            <div class="post-options">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <ul class="post-tags">
-                                                            <li><i class="fa fa-tags"></i></li>
-                                                            <li><a href="#">Best Templates</a>,</li>
-                                                            <li><a href="#">TemplateMo</a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <ul class="post-share">
-                                                            <li><i class="fa fa-share-alt"></i></li>
-                                                            <li><a href="#">Facebook</a>,</li>
-                                                            <li><a href="#"> Twitter</a></li>
-                                                        </ul>
-                                                    </div>
+                            <div class="col-lg-12">
+                                <div class="blog-post">
+                                    <div class="blog-thumb">
+                                        <img src="{{ objects.image.url }}" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        <a href="{{ objects.get_absolute_url }}"><h4>{{ objects.title }}</h4></a>
+                                        <ul class="post-info">
+                                            <li><a href="#">Admin</a></li>
+                                            <li><a href="#">{{ objects.created }}</a></li>
+                                            <li><a href="#">10 Comments</a></li>
+                                        </ul>
+                                        <p>
+                                            {{ objects.text }}
+                                        </p>
+                                        <div class="post-options">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <ul class="post-tags">
+                                                        <li><i class="fa fa-tags"></i></li>
+                                                        <li><a href="#">Best Templates</a>,</li>
+                                                        <li><a href="#">TemplateMo</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-6">
+                                                    <ul class="post-share">
+                                                        <li><i class="fa fa-share-alt"></i></li>
+                                                        <li><a href="#">Facebook</a>,</li>
+                                                        <li><a href="#"> Twitter</a></li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="col-lg-12">
                                 <div class="col-lg-12">
                                     <div class="sidebar-item comments">
                                         <div class="sidebar-heading">
-                                            <h2>4 comments</h2>
+                                            <h2>{{ comments.count }} comments</h2>
                                         </div>
 
-                                        {% for comment in article.comments.all %}
                                         <div class="content">
-                                             
-                                            <ul>
-
-                                                {% if comment.parent == None %}
+                                            <ul class="comments">
+                                                {% for comment in comments %}
                                                     <li>
                                                         <div class="author-thumb">
-                                                            <img src="" alt="">
-                                                        </div>
-                                                        <div class="right-content">
-                                                            <h4><span>{{ comment.created}}</span></h4>
-                                                            <p>{{ comment.text}}</p>
-                                                        </div>
-                                                    </li>
-                                                {% else %}
-                                                    
-                                                    <li class="replied">
-                                                        <div class="author-thumb">
-                                                          <img src="assets/images/comment-author-02.jpg" alt="">
-                                                        </div>
-                                                        <div class="right-content">
-                                                          <h4>Thirteen Man<span>May 20, 2020</span></h4>
-                                                          <p>In porta urna sed venenatis sollicitudin. Praesent urna sem, pulvinar vel mattis eget.</p>
-                                                        </div>
-                                                      </li>
-                                                      <li>
-                                                    </li>
-                                                    <div></div>
-                                                {% endif %}
-                                            </ul>
-                                            
-                                        </div>
-                                        {% endfor %}
 
+                                                        </div>
+                                                        <div class="right-content">
+                                                            <h4>
+                                                                @{{ comment.author.username }}<span>{{ comment.created }}</span>
+                                                            </h4>
+                                                            <p>{{ comment.text }}</p>
+                                                        </div>
+
+
+                                                        <button class="btn btn-sm btn-primary reply-btn"
+                                                                data-username="{{ comment.author.username }}"
+                                                                data-form-id="reply-form-{{ comment.id }}">
+                                                            Reply
+                                                        </button>
+
+
+                                                        <div id="reply-form-{{ comment.id }}"
+                                                             style="display:none; margin-top:10px;">
+                                                            <form method="post"
+                                                                  action="{% url 'blog:detail' slug=objects.slug %}">
+                                                                {% csrf_token %}
+                                                                <textarea name="text" class="reply-textarea" rows="3"
+                                                                          placeholder="Write a reply..."></textarea>
+                                                                <input type="hidden" name="parent_id"
+                                                                       value="{{ comment.id }}">
+                                                                <button type="submit" class="btn btn-sm btn-success">
+                                                                    Send Reply
+                                                                </button>
+                                                            </form>
+                                                        </div>
+
+
+                                                        <!-- ریپلای‌ها فقط اگر وجود دارند -->
+                                                        {% if comment.replies.exists %}
+                                                            <ul>
+                                                                {% for reply in comment.replies.all %}
+                                                                    <li class="replied">
+                                                                        <div class="author-thumb">
+                                                                            <img src="{% static 'images/comment-author-02.jpg' %}"
+                                                                                 alt="">
+                                                                        </div>
+                                                                        <div class="right-content">
+                                                                            <h4>
+                                                                                @{{ reply.author.username }}<span>{{ reply.created }}</span>
+                                                                            </h4>
+                                                                            <p>{{ reply.text }}</p>
+                                                                        </div>
+                                                                    </li>
+
+                                                                {% endfor %}
+                                                            </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                <div class="col-lg-12">
-                                    <div class="sidebar-item submit-comment">
-                                        <div class="sidebar-heading">
-                                            <h2>Your comment</h2>
-                                        </div>
-                                        <div class="content">
-                                            <form id="comment" action="#" method="post">
-                                                {% csrf_token %}
-                                                <div class="row">
+                            <div class="col-lg-12">
+                                <div class="sidebar-item submit-comment">
+                                    <div class="sidebar-heading">
+                                        <h2>Your comment</h2>
+                                    </div>
+                                    <div class="content">
+                                        <form id="comment" action="#" method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
 
-                                                    <div class="col-lg-12">
-                                                        <fieldset>
-                                                            {{form.text}}
-                                        
-                                                        </fieldset>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <fieldset>
-                                                            <button type="submit" id="form-submit" class="main-button">
-                                                                Submit
-                                                            </button>
-                                                        </fieldset>
-                                                    </div>
+                                                <div class="col-lg-12">
+                                                    <fieldset>
+                                                        {{ form.text }}
+
+                                                    </fieldset>
                                                 </div>
-                                            </form>
-                                        </div>
+                                                <div class="col-lg-12">
+                                                    <fieldset>
+                                                        <button type="submit" id="form-submit" class="main-button">
+                                                            Submit
+                                                        </button>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    {% include 'includes/sidebar.html' %}
-
                 </div>
+
+                {% include 'includes/sidebar.html' %}
+
             </div>
-        </section>
+        </div>
+    </section>
 
 
+    <script src="{% static "js/reply.js" %}">
+
+    </script>
 
 
 

@@ -26,12 +26,12 @@ class Contact_Form(forms.Form):
             return  ValidationError("no")
         
 
-class Comment_Form(forms.Form):
+class Comment_Form(forms.ModelForm):
     
-    text = forms.CharField(widget=forms.Textarea , label="Text")    
-    
-        
-    
+    class Meta:
+        model = Comment
+        fields = ['text']
+
 
 
 

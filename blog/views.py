@@ -1,22 +1,44 @@
+"""
+views.py - Blog system
+
+Them main views list:
+    - article detail
+    - article list
+    - about page
+    - contact page
+    - category system
+    - search system
+
+
+Decorators that used in this file
+    - login_check
+
+"""
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .models import Article, Category
+from .models import Article, Category, Comment
 from .forms import Contact_Form, Comment_Form
 from django.core.paginator import Paginator
 from .models import Comment, Message
 from django.urls import reverse
+from django.contrib.auth import authenticate
+from decorators.decorators import login_check
 
 
 def index(request):
     article = Article.objects.filter(status=True)
     article_ordring = Article.objects.all()[:3]
 
-    return render(request, 'blog/index.html', {'objects': article, 'article_ordring': article_ordring})
-
+    return render(
+        request,
+        "blog/index.html",
+        {"objects": article, "article_ordring": article_ordring},
+    )
 
 
 def about(request):
-    return render(request, 'blog/about.html', {})
+    return render(request, "blog/about.html", {})
 
 
 def contact(request):
@@ -33,9 +55,8 @@ def contact(request):
             Message.objects.create(name=name, text=text, email=email)
 
             # redirect to a new URL:
-            return redirect(reverse("blog:home"))   #  If you to use app-name in python , 
-                                                    #you should use reverse function
-                                                    
+            return redirect(reverse("blog:home"))  #  If you to use app-name in python ,
+            # you should use reverse function
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -45,35 +66,51 @@ def contact(request):
 
 
 def article(request):
-    article = Article.custom_manager.all() # Using the custom base-query-set to filter active articles
+    article = (
+        Article.objects.all()
+    )  # Using the custom base-query-set to filter active articles
     # In manager.py, the get_queryset method filters articles with status=True
 
     paginator = Paginator(article, 1)  # Show 4 contacts per page.
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'blog/blog.html', {'objects': page_obj})
+    return render(request, "blog/blog.html", {"objects": page_obj})
 
 
+@login_check  # this deocrator is for check the user if anonymous , in decorators folder
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
-    comment = Comment.objects.all()
+    comment = Comment.objects.filter(article=article, parent__isnull=True)
 
     if request.method == "POST":
         form = Comment_Form(request.POST)
+        parent_id = request.POST.get("parent_id")
 
         if form.is_valid():
-            text = form.cleaned_data['text']
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.article = article
 
-            Comment.objects.create(text=text, post=article)
+            if parent_id:
+                try:
+                    comment_parent = Comment.objects.get(id=parent_id)
+                    comment.parent = comment_parent
+                except Comment.DoesNotExist:
+                    comment.parent = None
 
+            comment.save()
+
+            return redirect(reverse("blog:detail", kwargs={"slug": slug}))
 
     else:
         form = Comment_Form()
 
-    return render(request, 'blog/article-details.html', {'objects': article,
-                                                         'comments': comment,
-                                                         "form": form})
+    return render(
+        request,
+        "blog/article-details.html",
+        {"objects": article, "form": form, "comments": comment},
+    )
 
 
 def category_detail(request, slug):
@@ -81,18 +118,20 @@ def category_detail(request, slug):
     articles = category.articles.all()
     # Reverse relationship is used here to get all articles related to the category
     # we use this by typing "model_name.related_name.all()" , the ralated_name is defined in the model
-    # the defult of related_name is "model_name_set" , so we can use "category.article_set.all()" 
+    # the defult of related_name is "model_name_set" , so we can use "category.article_set.all()"
     # but we can change it to a more readable name like "articles" in the model
 
-    return render(request, 'blog/blog.html', {'objects': articles})
+    return render(request, "blog/blog.html", {"objects": articles})
 
 
 def search(request):
-    q = request.GET.get('q')
-    search_title = Article.objects.filter(title__icontains=q)  # sensitive without "i" in contains
+    q = request.GET.get("q")
+    search_title = Article.objects.filter(
+        title__icontains=q
+    )  # sensitive without "i" in contains
     paginator = Paginator(search_title, 1)  # Show 1 article per pages.
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'blog/blog.html', {'objects': page_obj})
+    return render(request, "blog/blog.html", {"objects": page_obj})
