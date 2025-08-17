@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.env/
+.venv/
+
+# Database files
+*.sqlite3
+db.sqlite3
+
+# Media and static files (generated or uploaded)
+media/
+static_collected/  # Or whatever your collected static files directory is named
+
+# Log files
+*.log
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+tmp/
+
+# Local settings (containing sensitive information)
+local_settings.py  # Or whatever you name your local settings file
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Build artifacts
+dist/
+build/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller files
+*.manifest
+*.spec
+
+# Celerybeat schedule file
+celerybeat-schedule
+
+# Node modules (if using a frontend framework alongside Django)
+node_modules/
