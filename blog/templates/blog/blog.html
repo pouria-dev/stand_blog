@@ -99,8 +99,11 @@
 
                                     <ul class="page-numbers">
                                         {% if objects.has_previous %}
-                                            <li><a href="?page={{ objects.previous_page_number }}"><i class="fa fa-angle-double-left"></i></a></li>
-                                        {% endif %}
+                                            <li><a href="?page={{ objects.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}"><i class="fa fa-angle-double-left"></i></a></li>
+                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
+
+                                        
+                                            {% endif %}
 
                                         {% for num in objects.paginator.page_range %}
 
@@ -109,10 +112,13 @@
 
 
                                                 <li class="active"><a href="?page={{ num }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
 
                                             {% else %}
 
                                                 <li ><a href="?page={{num}}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+                                                {% comment %} "if request.GET.q" means when i change pange in    result q pass the url and not equel None  {% endcomment %}
+
                                             {% endif %}
 
 
@@ -120,8 +126,9 @@
 
                                         {% if objects.has_next %}
                                             <li><a href="?page={{ objects.next_page_number }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %} "><i class="fa fa-angle-double-right"></i></a></li>
+                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
 
-                                        {% endif %}
+                                            {% endif %}
                                     </ul>
                                 {% endif %}
                             </div>

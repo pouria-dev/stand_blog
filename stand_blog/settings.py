@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_render_partial', # For rendering partial templates
     'django_social_share', # For social sharing features
-    
+
     "blog.apps.BlogConfig",
     "user_app.apps.UserAppConfig",
 

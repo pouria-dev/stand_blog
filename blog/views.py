@@ -29,6 +29,7 @@ from decorators.decorators import login_check
 def index(request):
     article = Article.objects.filter(status=True)
     article_ordring = Article.objects.all()[:3]
+    
 
     return render(
         request,
@@ -39,6 +40,7 @@ def index(request):
 
 def about(request):
     return render(request, "blog/about.html", {})
+
 
 
 def contact(request):
@@ -70,7 +72,8 @@ def article(request):
         Article.objects.all()
     )  # Using the custom base-query-set to filter active articles
     # In manager.py, the get_queryset method filters articles with status=True
-
+    searching = request.Get.get("q")
+    results = Article.objects.filter(title_icontain = searching)
     paginator = Paginator(article, 1)  # Show 4 contacts per page.
 
     page_number = request.GET.get("page")
@@ -124,14 +127,7 @@ def category_detail(request, slug):
     return render(request, "blog/blog.html", {"objects": articles})
 
 
-def search(request):
+def searching_system(request):
     q = request.GET.get("q")
-    search_title = Article.objects.filter(
-        title__icontains=q
-    )  # sensitive without "i" in contains
-    paginator = Paginator(search_title, 1)  # Show 1 article per pages.
-
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "blog/blog.html", {"objects": page_obj})
+    result = Article.objects.filter(title__icontains=q)
+    return render(request , "blog/blog.html" , context={"objects" : result})

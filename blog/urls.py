@@ -10,5 +10,5 @@ urlpatterns = [
     path('detail/<str:slug>' , article_detail , name='detail'),
     path('category/<str:slug>' , category_detail , name='category'),
     path('contact' , contact , name="contact"),
-    path('search' , search , name='search_system'),
+    path('search' , searching_system , name='search_system'),
 ]
