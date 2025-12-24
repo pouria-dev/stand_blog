@@ -66,10 +66,10 @@
                                             <a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
                                             <ul class="post-info">
                                                 <li><a href="#">Admin</a></li>
-                                                <li><a href="#">{{ object.created |date:"M d,Y" }}</a></li>
+                                                <li><a href="#">{{ object.created |date:"SHORT_DATE_FORMAT" }}</a></li>
                                                 <li><a href="#">12 Comments</a></li>
                                             </ul>
-                                            <p>{{ object.text |slice:":50" }}...</p>
+                                            <p>{{ object.text |truncatewords::50 }}...</p>
                                             <div class="post-options">
                                                 <div class="row">
                                                     <div class="col-lg-12">
@@ -95,12 +95,24 @@
 
 
                             <div class="col-lg-12">
+
+
+
+
+                                {% with searching=request.GET.q %}
+
+
+
+                                {% comment %} "?" in url , it's means that we are querying on data and get result .
+                                "&" split querying on parameter .
+                                for example ?data=django&page=6 , get result every django datas on page 6  {% endcomment %}
+
                                 {% if objects.has_other_pages %}
 
                                     <ul class="page-numbers">
                                         {% if objects.has_previous %}
-                                            <li><a href="?page={{ objects.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}"><i class="fa fa-angle-double-left"></i></a></li>
-                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
+                                            <li><a href="?page={{ objects.previous_page_number }}{% if searching %}&q={{searching}}{% endif %}"><i class="fa fa-angle-double-left"></i></a></li>
+                                                {% comment %} if request.GET.q means when i change page in search result q pass the url and not equal None  {% endcomment %}
 
                                         
                                             {% endif %}
@@ -111,13 +123,13 @@
 
 
 
-                                                <li class="active"><a href="?page={{ num }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
-                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
+                                                <li class="active"><a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+                                                {% comment %} if request.GET.q means when i change page in search result q pass the url and not equal None  {% endcomment %}
 
                                             {% else %}
 
-                                                <li ><a href="?page={{num}}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
-                                                {% comment %} "if request.GET.q" means when i change pange in    result q pass the url and not equel None  {% endcomment %}
+                                                <li ><a href="?page={{num}}{% if searching %}&q={{ searching }}{% endif %}">{{ num }}</a></li>
+                                                {% comment %} "if request.GET.q" means when i change page in    result q pass the url and not equal None  {% endcomment %}
 
                                             {% endif %}
 
@@ -125,12 +137,17 @@
                                         {% endfor %}
 
                                         {% if objects.has_next %}
-                                            <li><a href="?page={{ objects.next_page_number }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %} "><i class="fa fa-angle-double-right"></i></a></li>
-                                                {% comment %} if request.GET.q means when i change pange in search result q pass the url and not equel None  {% endcomment %}
+                                            <li><a href="?page={{ objects.next_page_number }}{% if searching %}&q={{ searching }}{% endif %} "><i class="fa fa-angle-double-right"></i></a></li>
+                                                {% comment %} if request.GET.q means when i change page in search result q pass the url and not equal None  {% endcomment %}
 
                                             {% endif %}
                                     </ul>
+
                                 {% endif %}
+
+                                {% endwith %} {# for searching results #}
+
+
                             </div>
 
 

@@ -120,8 +120,8 @@ def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     articles = category.articles.all()
     # Reverse relationship is used here to get all articles related to the category
-    # we use this by typing "model_name.related_name.all()" , the ralated_name is defined in the model
-    # the defult of related_name is "model_name_set" , so we can use "category.article_set.all()"
+    # we use this by typing "model_name.related_name.all()" , the related_name is defined in the model
+    # the default of related_name is "model_name_set" , so we can use "category.article_set.all()"
     # but we can change it to a more readable name like "articles" in the model
 
     return render(request, "blog/blog.html", {"objects": articles})
@@ -129,5 +129,11 @@ def category_detail(request, slug):
 
 def searching_system(request):
     q = request.GET.get("q")
-    result = Article.objects.filter(title__icontains=q)
-    return render(request , "blog/blog.html" , context={"objects" : result})
+    result = Article.objects.filter(title__icontains=q) #Case-insensitive
+    paginator = Paginator(result, 1)  # Show 1 contacts per page.
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number) # Rewrite paginator system in html file for handling q
+
+
+    return render(request , "blog/blog.html" , context={"objects" : page_obj})

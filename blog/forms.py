@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 
 class Contact_Form(forms.Form):
-    name = forms.CharField(max_length=10 , label="Name")
+    name = forms.CharField(max_length=10 , label="Name" , required=True)
     text = forms.CharField(widget=forms.Textarea , label="Text")
     email = forms.EmailField(label="Email:")
 
@@ -23,8 +23,9 @@ class Contact_Form(forms.Form):
         name = self.cleaned_data.get('name')
 
         if "p" in name:
-            return  ValidationError("no")
-        
+            raise ValidationError("no")
+    
+        return name       
 
 class Comment_Form(forms.ModelForm):
     

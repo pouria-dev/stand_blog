@@ -548,3 +548,12 @@ iframe {
 
 
 
+.alert-warning {
+    padding: 12px 20px;
+    background-color: #ffcc00; /* رنگ زرد هشدار */
+    color: white; /* رنگ متن */
+    border: 1px solid #ffaa00; /* حاشیه */
+    border-radius: 5px;
+    font-size: 14px;
+    margin: 10px 0;
+}
