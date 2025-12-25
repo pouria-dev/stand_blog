@@ -1,10 +1,11 @@
+from importlib.metadata import pass_none
+
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate , login ,logout
 from django.urls import  reverse
 from django.contrib import  messages
-from .forms import DashBoard_Form , Login_Form
-
+from .forms import DashBoard_Form , Login_Form, Register_Form
 
 
 
@@ -37,6 +38,32 @@ def login_user(request):
 
 def logout_view(request):
     logout(request)
+    return redirect('blog:home')
+
+
+
+def register_user(request):
+    if request.user.is_authenticated:
+        return redirect('blog:home')
+
+    form = Register_Form(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = User.objects.create_user(username=username, email=email, password=password)
+
+            login(request, user)
+
+            return redirect('blog:home')
+
+        else:
+            form.add_error(None , "something went wrong")
+
+    return render(request , 'user_app/register.html' , {'form':form})
+
+
 
 
 def dashboard(request):
