@@ -1,12 +1,7 @@
-from importlib.metadata import pass_none
-
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate , login ,logout
-from django.urls import  reverse
-from django.contrib import  messages
-from .forms import DashBoard_Form , Login_Form, Register_Form
-
+from .forms import Login_Form, Register_Form, User_PanelForm
 
 
 def login_user(request):
@@ -66,11 +61,10 @@ def register_user(request):
 
 
 
-def dashboard(request):
-    if request.method == 'POST':
-        form = DashBoard_Form(request.POST, request.FILES)
+def user_panel(request):
+    form = User_PanelForm(instance=request.user)
+    if request.method == "POST":
+        form = User_PanelForm(request.POST , instance=request.user)
         if form.is_valid():
-            messages.success(request, 'You have successfully logged in.')
-
-    else:
-        form = DashBoard_Form()
+            form.save()
+    return render(request, "user_app/user_panel.html", context={'form':form})

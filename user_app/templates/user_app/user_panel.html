@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+    <!-- Page Content -->
+
+    <section class="contact-us">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="down-contact">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="sidebar-item contact-form">
+                                    <div class="sidebar-heading">
+                                        <h2>User Profile</h2>
+                                    </div>
+                                    <div class="content">
+                                        <form id="contact" action="" method="post">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                    <div class="alert-danger">
+                                                        {{ form.non_field_errors }}
+                                                    </div>
+                                                    <div class="alert-danger">{{ form.username.errors }}</div>
+                                                    {{ form.username.label }}
+
+                                                    {{ form.username }}
+
+
+                                                    <div class="alert-danger">{{ form.email.errors }} </div>
+                                                    {{ form.email.label }}
+
+                                                    {{ form.email }}
+
+                                                    {{ form.password.label }}
+
+                                                    {{ form.password }}
+                                                </div>
+
+
+                                                <div class="col-lg-12">
+                                                    <fieldset>
+                                                        <button type="submit" id="form-submit" class="main-button">Update
+                                                        </button>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+{% endblock %}

@@ -68,20 +68,24 @@ def contact(request):
 
 
 def article(request):
-    article = (
-        Article.objects.all()
-    )  # Using the custom base-query-set to filter active articles
-    # In manager.py, the get_queryset method filters articles with status=True
-    searching = request.Get.get("q")
-    results = Article.objects.filter(title_icontain = searching)
-    paginator = Paginator(article, 1)  # Show 4 contacts per page.
+    articles = Article.objects.all()  # queryset اصلی
 
+    searching = request.GET.get("q")
+
+    if searching:
+        results = articles.filter(title__icontains=searching)
+    else:
+        results = articles
+
+    paginator = Paginator(results, 4)  # مثلا 4 تا در هر صفحه
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
     return render(request, "blog/blog.html", {"objects": page_obj})
 
 
-@login_check  # this deocrator is for check the user if anonymous , in decorators folder
+
+@login_check  # this decorator is for check the user if anonymous , in decorators folder
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     comment = Comment.objects.filter(article=article, parent__isnull=True)
