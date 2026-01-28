@@ -2,6 +2,7 @@
 views.py - Blog system
 
 Them main views list:
+    - index page
     - article detail
     - article list
     - about page
@@ -24,24 +25,19 @@ from .models import Comment, Message
 from django.urls import reverse
 from django.contrib.auth import authenticate
 from decorators.decorators import login_check
+from django.views.generic import ListView
+from django.views.generic import TemplateView
 
 
-def index(request):
-    article = Article.objects.filter(status=True)
-    article_ordring = Article.objects.all()[:3]
-    
+class IndexView(ListView):
+    model = Article
+    template_name = "blog/index.html"
+    context_object_name = "articles"
+    def get_queryset(self):
+        return Article.objects.filter(status=True).order_by('-id')[:3]  # ordering by newest articles first
 
-    return render(
-        request,
-        "blog/index.html",
-        {"objects": article, "article_ordring": article_ordring},
-    )
-
-
-def about(request):
-    return render(request, "blog/about.html", {})
-
-
+class AboutView(TemplateView):
+    template_name = "blog/about.html"
 
 def contact(request):
     if request.method == "POST":

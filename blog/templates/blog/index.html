@@ -11,15 +11,15 @@
 
 
             <div class="owl-banner owl-carousel">
-                {% for object in objects %}
+                {% for article in articles %}
                     <div class="item">
-                        <img src="{{ object.image.url }}" alt="">
+                        <img src="{{ article.image.url }}" alt="">
                         <div class="item-content">
                             <div class="main-content">
                                 <div class="meta-category">
-                                    <span>{{ object.category }}</span>
+                                    <span>{{ article.category }}</span>
                                 </div>
-                                <a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+                                <a href="{{ article.get_absolute_url }}"><h4>{{ article.title }}</h4></a>
                                 <ul class="post-info">
                                     <li><a href="#">Admin</a></li>
                                     <li><a href="#">May 12, 2020</a></li>
@@ -42,21 +42,21 @@
                     <div class="all-blog-posts">
                         <div class="row">
 
-                            {% for object in article_ordring %}
+                            {% for article in articles %}
                                 <div class="col-lg-12">
                                     <div class="blog-post">
                                         <div class="blog-thumb">
-                                            <img src="{{ object.banner.url }}" alt="">
+                                            <img src="{{ article.banner.url }}" alt="">
                                         </div>
                                         <div class="down-content">
-                                            <span>{{ object.category }}</span>
-                                            <a href="{{object.get_absolute_url}}"><h4>{{ object.title }}</h4></a>
+                                            <span>{{ article.category }}</span>
+                                            <a href="{{ article.get_absolute_url }}"><h4>{{ article.title }}</h4></a>
                                             <ul class="post-info">
                                                 <li><a href="#">Admin</a></li>
                                                 <li><a href="#">May 31, 2020</a></li>
                                                 <li><a href="#">12 Comments</a></li>
                                             </ul>
-                                            <p>{{ object.text }}<a rel="nofollow" href="https://templatemo.com/contact"
+                                            <p>{{ article.text }}<a rel="nofollow" href="https://templatemo.com/contact"
                                                                    target="_parent">Contact TemplateMo</a> for more
                                                 info. Thank you.</p>
                                             <div class="post-options">
