@@ -7,7 +7,7 @@ Them main views list:
     - article list
     - about page
     - contact page
-    - category system
+    - categories list
     - search system
 
 
@@ -22,12 +22,10 @@ from .models import Article, Category, Comment
 from .forms import Contact_Form, Comment_Form
 from django.core.paginator import Paginator
 from .models import Comment, Message
-from django.urls import reverse
+from django.urls import reverse , reverse_lazy
 from django.contrib.auth import authenticate
 from decorators.decorators import login_check
-from django.views.generic import ListView
-from django.views.generic import TemplateView
-
+from django.views.generic import TemplateView , FormView , ListView
 
 class IndexView(ListView):
     model = Article
@@ -39,33 +37,36 @@ class IndexView(ListView):
 class AboutView(TemplateView):
     template_name = "blog/about.html"
 
-def contact(request):
-    if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        form = Contact_Form(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            name = form.cleaned_data["name"]
-            text = form.cleaned_data["text"]
-            email = form.cleaned_data["email"]
-            Message.objects.create(name=name, text=text, email=email)
 
-            # redirect to a new URL:
-            return redirect(reverse("blog:home"))  #  If you to use app-name in python ,
-            # you should use reverse function
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = Contact_Form()
+class CategoryListView(ListView):
+    model = Article
+    template_name = "blog/list.html"
+    context_object_name = "articles"
+    
+    def get_queryset(self):
+        slug = self.kwargs.get('slug')
+        category = get_object_or_404(Category, slug=slug)
+        return category.articles.all()
 
-    return render(request, "blog/contact.html", {"form": form})
+
+
+class ContactView(FormView):
+    template_name = "blog/contact.html"
+    form_class = Contact_Form
+    success_url = reverse_lazy("blog:contact")
+
+    def form_valid(self, form):
+        name = form.cleaned_data["name"]
+        text = form.cleaned_data["text"]
+        email = form.cleaned_data["email"]
+        Message.objects.create(name=name, text=text, email=email)
+        return super().form_valid(form)
+
 
 
 def article(request):
-    articles = Article.objects.all()  # queryset اصلی
-
+    articles = Article.objects.all()  # queryset 
     searching = request.GET.get("q")
 
     if searching:
@@ -77,7 +78,7 @@ def article(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "blog/blog.html", {"objects": page_obj})
+    return render(request, "blog/list.html", {"object": page_obj})
 
 
 
@@ -111,21 +112,11 @@ def article_detail(request, slug):
 
     return render(
         request,
-        "blog/article-details.html",
+        "blog/detail.html",
         {"objects": article, "form": form, "comments": comment},
     )
 
-
-def category_detail(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    articles = category.articles.all()
-    # Reverse relationship is used here to get all articles related to the category
-    # we use this by typing "model_name.related_name.all()" , the related_name is defined in the model
-    # the default of related_name is "model_name_set" , so we can use "category.article_set.all()"
-    # but we can change it to a more readable name like "articles" in the model
-
-    return render(request, "blog/blog.html", {"objects": articles})
-
+    
 
 def searching_system(request):
     q = request.GET.get("q")
@@ -136,4 +127,4 @@ def searching_system(request):
     page_obj = paginator.get_page(page_number) # Rewrite paginator system in html file for handling q
 
 
-    return render(request , "blog/blog.html" , context={"objects" : page_obj})
+    return render(request , "blog/list.html" , context={"objects" : page_obj})

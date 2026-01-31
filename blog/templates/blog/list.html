@@ -54,19 +54,19 @@
                         <div class="row">
 
 
-                            {% for object in  objects %}
+                            {% for article in  articles %}
 
                                 <div class="col-lg-6">
                                     <div class="blog-post">
                                         <div class="blog-thumb">
-                                            <img src="{{ object.image.url }}" alt="">
+                                            <img src="{{ article.image.url }}" alt="">
                                         </div>
                                         <div class="down-content">
                                             <span>Lifestyle</span>
-                                            <a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+                                            <a href="{{ article.get_absolute_url }}"><h4>{{ article.title }}</h4></a>
                                             <ul class="post-info">
                                                 <li><a href="#">Admin</a></li>
-                                                <li><a href="#">{{ object.created |date:"SHORT_DATE_FORMAT" }}</a></li>
+                                                <li><a href="#">{{ article.created |date:"SHORT_DATE_FORMAT" }}</a></li>
                                                 <li><a href="#">12 Comments</a></li>
                                             </ul>
                                             <p>{{ object.text |truncatewords:50 }}...</p>
