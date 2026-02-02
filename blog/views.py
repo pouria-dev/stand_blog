@@ -4,11 +4,11 @@ views.py - Blog system
 Them main views list:
     - index page
     - article detail
-    - article list
+    - article list include searching functionality
     - about page
     - contact page
     - categories list
-    - search system
+
 
 
 Decorators that used in this file
@@ -38,6 +38,25 @@ class AboutView(TemplateView):
     template_name = "blog/about.html"
 
 
+class ArticleListView(ListView):
+    model = Article
+    template_name = "blog/list.html"
+    context_object_name = "articles"
+    paginate_by = 4  # Number of articles per page
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        searching = self.request.GET.get("q")
+        if searching:
+            queryset = queryset.filter(title__icontains=searching)
+        return queryset
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET.get('q', '') # q is key , '' is default value
+        return context
+    
 
 class CategoryListView(ListView):
     model = Article
@@ -49,36 +68,14 @@ class CategoryListView(ListView):
         category = get_object_or_404(Category, slug=slug)
         return category.articles.all()
 
-
-
 class ContactView(FormView):
     template_name = "blog/contact.html"
     form_class = Contact_Form
     success_url = reverse_lazy("blog:contact")
 
     def form_valid(self, form):
-        name = form.cleaned_data["name"]
-        text = form.cleaned_data["text"]
-        email = form.cleaned_data["email"]
-        Message.objects.create(name=name, text=text, email=email)
+        form.save()
         return super().form_valid(form)
-
-
-
-def article(request):
-    articles = Article.objects.all()  # queryset 
-    searching = request.GET.get("q")
-
-    if searching:
-        results = articles.filter(title__icontains=searching)
-    else:
-        results = articles
-
-    paginator = Paginator(results, 4)  # مثلا 4 تا در هر صفحه
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "blog/list.html", {"object": page_obj})
 
 
 
@@ -117,14 +114,3 @@ def article_detail(request, slug):
     )
 
     
-
-def searching_system(request):
-    q = request.GET.get("q")
-    result = Article.objects.filter(title__icontains=q) #Case-insensitive
-    paginator = Paginator(result, 1)  # Show 1 contacts per page.
-
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number) # Rewrite paginator system in html file for handling q
-
-
-    return render(request , "blog/list.html" , context={"objects" : page_obj})

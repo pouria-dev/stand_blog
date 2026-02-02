@@ -1,9 +1,9 @@
 from django import forms
+from django.forms import ModelForm
 from django.core.validators import ValidationError
 from .models import Comment
 from django.contrib.auth import aauthenticate
 from django.contrib.auth.models import User
-
 
 class Contact_Form(forms.Form):
     name = forms.CharField(max_length=10 , label="Name" , required=True)
