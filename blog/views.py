@@ -27,6 +27,9 @@ from django.contrib.auth import authenticate
 from decorators.decorators import login_check
 from django.views.generic import TemplateView , FormView , ListView
 
+
+
+
 class IndexView(ListView):
     model = Article
     template_name = "blog/index.html"
@@ -79,7 +82,7 @@ class ContactView(FormView):
 
 
 
-@login_check  # this decorator is for check the user if anonymous , in decorators folder
+@login_check  # this decorator is for check the user if anonymous redirect to login page, in decorators folder
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     comment = Comment.objects.filter(article=article, parent__isnull=True)
