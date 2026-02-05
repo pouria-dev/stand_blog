@@ -25,7 +25,9 @@ from .models import Comment, Message
 from django.urls import reverse , reverse_lazy
 from django.contrib.auth import authenticate
 from decorators.decorators import login_check
-from django.views.generic import TemplateView , FormView , ListView
+from django.views.generic import TemplateView , FormView , ListView 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 
@@ -77,7 +79,10 @@ class ContactView(FormView):
     success_url = reverse_lazy("blog:contact")
 
     def form_valid(self, form):
-        form.save()
+        name = form.cleaned_data.get("name")
+        email = form.cleaned_data.get("email")
+        text = form.cleaned_data.get("text")
+        Message.objects.create(name=name, email=email, text=text)
         return super().form_valid(form)
 
 

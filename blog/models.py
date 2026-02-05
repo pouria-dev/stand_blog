@@ -105,3 +105,16 @@ class Message(models.Model):
     class Meta:
         verbose_name = "پیام"
         verbose_name_plural = "پیام ها"
+        
+
+class Like(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
+
+    class Meta:
+        unique_together = ("article", "user")
+        verbose_name = "لایک"
+        verbose_name_plural = "لایک ها"
+
+    def __str__(self):
+        return f"{self.user.username} likes {self.article.title}"
