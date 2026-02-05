@@ -18,7 +18,7 @@ Decorators that used in this file
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .models import Article, Category, Comment
+from .models import Article, Category, Comment , Like
 from .forms import Contact_Form, Comment_Form
 from django.core.paginator import Paginator
 from .models import Comment, Message
@@ -27,6 +27,7 @@ from django.contrib.auth import authenticate
 from decorators.decorators import login_check
 from django.views.generic import TemplateView , FormView , ListView 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
 
 
 
@@ -87,11 +88,19 @@ class ContactView(FormView):
 
 
 
-@login_check  # this decorator is for check the user if anonymous redirect to login page, in decorators folder
+
+
+
+
+  # this decorator is for check the user if anonymous redirect to login page, in decorators folder
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     comment = Comment.objects.filter(article=article, parent__isnull=True)
-
+    is_liked = article.likes.filter(user=request.user).exists() if request.user.is_authenticated else False
+    likes_count = article.likes.count()  # Count the number of likes for the article
+    comments_count = article.comments.count()  # Count the number of comments for the article
+    
+    
     if request.method == "POST":
         form = Comment_Form(request.POST)
         parent_id = request.POST.get("parent_id")
@@ -118,7 +127,23 @@ def article_detail(request, slug):
     return render(
         request,
         "blog/detail.html",
-        {"objects": article, "form": form, "comments": comment},
+        {"objects": article, "form": form, "comments": comment, "comments_count": comments_count, "likes": likes_count , "is_liked" : is_liked},
     )
 
     
+
+
+class LikeArticleView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        article = get_object_or_404(Article, slug=slug)
+        user = request.user
+
+        like, created = Like.objects.get_or_create(
+            article=article,
+            user=user
+        )
+
+        if not created:
+            like.delete()
+
+        return redirect(reverse_lazy("blog:detail", kwargs={"slug": slug})) 

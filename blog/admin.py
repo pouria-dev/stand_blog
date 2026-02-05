@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Article , Category , Comment , Message
-
+from .models import Like
 
 class FilterByTitle(admin.SimpleListFilter):
     title = "موارد پرتکرار"
@@ -28,9 +28,9 @@ class FilterByTitle(admin.SimpleListFilter):
 
 
 @admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title','created','updated', 'status')
-    list_filter = ('status', 'created', FilterByTitle)
+class ArticleAdmin(admin.ModelAdmin):   
+    list_display = ('title','created','updated', 'status' , 'like_count')
+    list_filter = ('status', 'created' ,FilterByTitle)
     list_editable = ('status',)
     search_fields = ('title', 'text')
     prepopulated_fields = {'slug': ('title',)}
@@ -45,6 +45,10 @@ class ArticleAdmin(admin.ModelAdmin):
         }),
     )
 
+    def like_count(self, obj):
+        return obj.likes.count()
+
+    like_count.short_description = "Likes ❤️"
 
 
 @admin.register(Category)

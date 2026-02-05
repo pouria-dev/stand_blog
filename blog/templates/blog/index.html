@@ -21,7 +21,7 @@
                                 </div>
                                 <a href="{{ article.get_absolute_url }}"><h4>{{ article.title }}</h4></a>
                                 <ul class="post-info">
-                                    <li><a href="#">Admin</a></li>
+                                    <li><a href="#"></a></li>
                                     <li><a href="#">May 12, 2020</a></li>
                                     <li><a href="#">12 Comments</a></li>
                                 </ul>
@@ -56,9 +56,7 @@
                                                 <li><a href="#">May 31, 2020</a></li>
                                                 <li><a href="#">12 Comments</a></li>
                                             </ul>
-                                            <p>{{ article.text }}<a rel="nofollow" href="https://templatemo.com/contact"
-                                                                   target="_parent">Contact TemplateMo</a> for more
-                                                info. Thank you.</p>
+                                            <p>{{ article.text | truncatewords:30 }}</p>
                                             <div class="post-options">
                                                 <div class="row">
                                                     <div class="col-6">

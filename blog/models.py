@@ -115,6 +115,7 @@ class Like(models.Model):
         unique_together = ("article", "user")
         verbose_name = "لایک"
         verbose_name_plural = "لایک ها"
+        unique_together = ("article", "user")
 
     def __str__(self):
         return f"{self.user.username} likes {self.article.title}"

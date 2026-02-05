@@ -44,9 +44,14 @@
                                     <div class="down-content">
                                         <a href="{{ objects.get_absolute_url }}"><h4>{{ objects.title }}</h4></a>
                                         <ul class="post-info">
-                                            <li><a href="#">Admin</a></li>
+                                            <li><a href="#">__author__</a></li>
                                             <li><a href="#">{{ objects.created }}</a></li>
-                                            <li><a href="#">10 Comments</a></li>
+                                            <li><a href="#">{{ comments_count }} Comments</a></li>
+                                    
+                                            
+                                            <li><a href="#">Likes: {{ likes }}</a></li>
+                                            
+                                            
                                         </ul>
                                         <p>
                                             {{ objects.text }}
@@ -65,6 +70,37 @@
                                                         <li><i class="fa fa-share-alt"></i></li>
                                                         <li><a href="#">Facebook</a>,</li>
                                                         <li><a href="#"> Twitter</a></li>
+                                                    </ul>
+                                                    <ul class="post-like">
+                                                    <form method="post" action="{% url 'blog:like' objects.slug %}">
+                                                        {% csrf_token %}
+                                                        {% if request.user.is_authenticated %}
+                                                            {% if is_liked %}
+                                                            <button type="submit" class="btn btn-sm btn-danger like-button">
+                                                                liked
+                                                            </button>
+
+                                                            {%else%}
+
+
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger like-button">
+                                                                🤍 Like
+                                                            </button>
+
+                                                            
+                                                            
+
+
+                                                            {% endif %}
+
+
+                                                        {% else %}
+                                                            <a href="{% url 'user:login' %}">Log in to like this article</a>
+                                                        {% endif %} 
+
+                                            
+                                                    </form>
+
                                                     </ul>
                                                 </div>
                                             </div>
