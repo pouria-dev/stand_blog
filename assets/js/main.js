@@ -85,3 +85,32 @@
 
 
 })(jQuery);
+
+
+// ajex for like article
+
+function like(slug) {
+    fetch(`/like/${slug}`)
+        .then(response => {
+            if(response.ok) {
+                alert("Article liked!");
+            } else {
+                alert("Failed to like article.");
+            }
+        })
+        .catch(error => alert("Error: " + error));
+}
+
+
+function dislike(slug) {
+    fetch(`/like/${slug}`)
+        .then(response => {
+            if(response.ok) {
+                alert("Article dislike!");
+            } else {
+                alert("Failed to dislike article.");
+            }
+        })
+        .catch(error => alert("Error: " + error));
+}
+
