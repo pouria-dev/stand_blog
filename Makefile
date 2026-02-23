@@ -1,13 +1,18 @@
 # ===============================
-# Stand Blog - GNU Makefile
+# Stand Blog - Makefile
 # ===============================
 
-PROJECT_NAME = stand_blog
-PYTHON = python3
-MANAGE = $(PYTHON) manage.py
-VENV = venv
-PIP = $(VENV)/bin/pip
-ACTIVATE = . $(VENV)/bin/activate
+PROJECT_NAME=stand_blog
+VENV=venv
+PYTHON=$(VENV)/bin/python
+PIP=$(VENV)/bin/pip
+MANAGE=$(PYTHON) manage.py
+
+# Load .env file if exists
+ifneq (,$(wildcard .env))
+    include .env
+    export
+endif
 
 .DEFAULT_GOAL := help
 
@@ -16,21 +21,21 @@ ACTIVATE = . $(VENV)/bin/activate
 # -------------------------------
 help:
 	@echo "Available commands:"
-	@echo "  make venv        Create virtual environment"
-	@echo "  make install     Install dependencies"
-	@echo "  make migrate     Apply migrations"
-	@echo "  make makemigrate Create new migrations"
-	@echo "  make run         Run development server"
-	@echo "  make superuser   Create superuser"
-	@echo "  make test        Run tests"
-	@echo "  make collect     Collect static files"
-	@echo "  make clean       Remove __pycache__ and pyc files"
+	@echo " make venv        Create virtual environment"
+	@echo " make install     Install dependencies"
+	@echo " make migrate     Apply migrations"
+	@echo " make makemigrate Create migrations"
+	@echo " make run         Run development server"
+	@echo " make superuser   Create superuser"
+	@echo " make test        Run tests"
+	@echo " make collect     Collect static files"
+	@echo " make clean       Clean cache files"
 
 # -------------------------------
-# Virtual Environment
+# Environment Setup
 # -------------------------------
 venv:
-	$(PYTHON) -m venv $(VENV)
+	python3 -m venv $(VENV)
 
 install:
 	$(PIP) install --upgrade pip
@@ -57,8 +62,11 @@ test:
 collect:
 	$(MANAGE) collectstatic --noinput
 
+shell:
+	$(MANAGE) shell
+
 # -------------------------------
-# Cleaning
+# Cleanup
 # -------------------------------
 clean:
 	find . -name "*.pyc" -delete
